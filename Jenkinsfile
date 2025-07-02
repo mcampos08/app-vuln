@@ -5,7 +5,7 @@ pipeline {
         VM_STAGING_IP = '192.168.72.128'
         STAGING_USER = 'clindata'
         STAGING_PATH = '/var/www/html/clindata'
-        GITHUB_REPO = 'https://github.com/mcampos08/app-vuln.git'
+        GITHUB_REPO = 'https://github.com/mcampos08/owasp-app.git'
 
         SONARQUBE_SERVER = 'SonarQube-Local'
         SYFT_OUTPUT = 'sbom.json'
@@ -86,15 +86,14 @@ pipeline {
                 script {
                     sshagent(['staging-ssh-key']) {
                         sh """
-                            ssh -o StrictHostKeyChecking=no ${STAGING_USER}@${VM_STAGING_IP} "
-                                echo '[SSH OK] $(hostname) - $(date)'
-                                uptime
-                            "
+                            ssh -o StrictHostKeyChecking=no ${STAGING_USER}@${VM_STAGING_IP} \\
+                            'echo "[SSH OK] \$(hostname) - \$(date)"; uptime'
                         """
                     }
                 }
             }
         }
+
 
         stage('🚀 Despliegue en Staging') {
             steps {
@@ -109,6 +108,7 @@ pipeline {
             }
         }
     }
+
 
     post {
         always {
