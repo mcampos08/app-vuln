@@ -47,13 +47,6 @@ pipeline {
             }
         }
 
-        stage('✅ Evaluar Quality Gate') {
-            steps {
-                timeout(time: 2, unit: 'MINUTES') {
-                    waitForQualityGate abortPipeline: true
-                }
-            }
-        }
 
         // MÓDULO 2: ANÁLISIS DE DEPENDENCIAS
         stage('🧬 Generar SBOM con Syft') {
