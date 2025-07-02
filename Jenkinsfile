@@ -5,7 +5,7 @@ pipeline {
         VM_STAGING_IP = '192.168.72.128'
         STAGING_USER = 'clindata'
         STAGING_PATH = '/var/www/html/clindata'
-        GITHUB_REPO = 'https://github.com/mcampos08/owasp-app.git'
+        GITHUB_REPO = 'https://github.com/mcampos08/app-vuln.git'
 
         SONARQUBE_SERVER = 'SonarQube-Local'
         SYFT_OUTPUT = 'sbom.json'
