@@ -15,7 +15,7 @@ pipeline {
         ZAP_REPORT_XML = 'zap-report.xml'
         
         // Configuración ZAP
-        ZAP_PORT = '8090'  // Puerto diferente a Jenkins para evitar confusiones
+        ZAP_PORT = '8090'
         ZAP_TIMEOUT = '300'  // 5 minutos timeout
     }
 
@@ -63,9 +63,9 @@ pipeline {
                                 
                                 # Verificar instalación de ZAP
                                 echo "Verificando ZAP..."
-                                if command -v zap.sh >/dev/null 2>&1; then
+                                if command -v zaproxy >/dev/null 2>&1; then
                                     echo "✅ ZAP instalado correctamente"
-                                    zap.sh -version
+                                    zaproxy -version
                                 else
                                     echo "❌ ZAP no encontrado"
                                     exit 1
@@ -77,7 +77,7 @@ pipeline {
                                 
                                 # Limpiar procesos ZAP anteriores
                                 echo "Limpiando procesos ZAP anteriores..."
-                                pkill -f "zap.sh" || true
+                                pkill -f "zaproxy" || true
                                 sleep 5
                                 
                                 echo "✅ Entorno preparado"
@@ -98,7 +98,7 @@ pipeline {
                                 cd ~/zap-test-reports
                                 
                                 echo "Iniciando ZAP daemon..."
-                                zap.sh -daemon -port ${ZAP_PORT} -host 0.0.0.0 &
+                                zaproxy -daemon -port ${ZAP_PORT} -host 0.0.0.0 &
                                 ZAP_PID=\$!
                                 echo "ZAP PID: \$ZAP_PID"
                                 
@@ -337,7 +337,7 @@ INFO=${infoCount}
                     sshagent(['kali-ssh-key']) {
                         sh """
                             ssh -o StrictHostKeyChecking=no ${ZAP_USER}@${ZAP_VM_IP} \\
-                            'pkill -f "zap.sh" || true; echo "Limpieza completada"'
+                            'pkill -f "zaproxy" || true; echo "Limpieza completada"'
                         """
                     }
                 } catch (Exception e) {
