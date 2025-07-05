@@ -181,9 +181,10 @@ pipeline {
                                 
                                 # Generar reportes
                                 echo "📄 Generando reportes..."
-                                curl -s "http://localhost:${ZAP_PORT}/JSON/core/view/jsonreport/" > zap-report.json
-                                curl -s "http://localhost:${ZAP_PORT}/OTHER/core/other/htmlreport/" > zap-report.html
-                                curl -s "http://localhost:${ZAP_PORT}/OTHER/core/other/xmlreport/" > zap-report.xml
+                                curl -s "http://localhost:${ZAP_PORT}/JSON/core/view/jsonreport/" > ~/zap-test-reports/zap-report.json
+				curl -s "http://localhost:${ZAP_PORT}/OTHER/core/other/htmlreport/" > ~/zap-test-reports/zap-report.html
+				curl -s "http://localhost:${ZAP_PORT}/OTHER/core/other/xmlreport/" > ~/zap-test-reports/zap-report.xml
+
                                 
                                 # Verificar que los reportes se generaron
                                 for report in zap-report.json zap-report.html zap-report.xml; do
