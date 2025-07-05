@@ -31,19 +31,7 @@ pipeline {
             }
         }
 
-        stage('📦 Instalar y Desplegar') {
-            steps {
-                sshagent(['staging-ssh-key']) {
-                    sh """
-                        echo 'Instalando dependencias...'
-                        composer install --no-interaction --prefer-dist
-                        echo 'Desplegando app en VM Staging...'
-                        rsync -avz --delete ./ ${STAGING_USER}@${VM_STAGING_IP}:${STAGING_PATH}
-                    """
-                }
-            }
-        }
-
+        
         stage('🔍 Análisis SAST con SonarQube') {
             steps {
                 script {
@@ -77,6 +65,17 @@ pipeline {
                     if [ \$? -ne 0 ]; then echo "BUILD_SHOULD_FAIL=true" > grype.fail; fi
                     set -e
                 """
+            }
+        }
+
+        stage('🚀 Despliegue en Staging') {
+            steps {
+                sshagent(['staging-ssh-key']) {
+                    sh """
+                        echo 'Desplegando app en VM Staging...'
+                        rsync -avz --delete ./ ${STAGING_USER}@${VM_STAGING_IP}:${STAGING_PATH}
+                    """
+                }
             }
         }
 
@@ -187,4 +186,3 @@ pipeline {
         }
     }
 }
-
