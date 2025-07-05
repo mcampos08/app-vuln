@@ -8,7 +8,7 @@ pipeline {
     }
 
     environment {
-        VM_STAGING_IP = '192.168.72.130'
+        VM_STAGING_IP = '192.168.81.130'
         STAGING_USER = 'clindata'
         STAGING_PATH = '/var/www/html/clindata'
         GITHUB_REPO = 'https://github.com/mcampos08/app-vuln.git'
