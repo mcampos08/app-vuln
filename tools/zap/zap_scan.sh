@@ -44,15 +44,23 @@ run_spider() {
     local scan_id
     scan_id=$(curl -s "http://localhost:$ZAP_PORT/JSON/spider/action/scan/?url=$TARGET" | jq -r '.scan')
 
-    if [ -z "$scan_id" ]; then
+    if [ -z "$scan_id" ] || [ "$scan_id" == "null" ]; then
         log_error "Fallo al iniciar Spider."
         return 1
     fi
 
     while true; do
-        status=$(curl -s "http://localhost:$ZAP_PORT/JSON/spider/view/status/?scanId=$scan_id" | jq -r '.status')
-        log_info "Spider progreso: $status%"
-        [ "$status" -eq 100 ] && break
+        status=$(curl -s "http://localhost:$ZAP_PORT/JSON/spider/view/status/?scanId=$scan_id" | jq -r '.status // empty')
+
+        if [[ "$status" =~ ^[0-9]+$ ]]; then
+            log_info "Spider progreso: $status%"
+            if [ "$status" -eq 100 ]; then
+                break
+            fi
+        else
+            log_error "Progreso Spider no válido: '$status'."
+            break
+        fi
         sleep 5
     done
 
@@ -65,15 +73,24 @@ run_active_scan() {
     local scan_id
     scan_id=$(curl -s "http://localhost:$ZAP_PORT/JSON/ascan/action/scan/?url=$TARGET&scanPolicyName=$policy" | jq -r '.scan')
 
-    if [ -z "$scan_id" ]; then
-        log_error "Fallo al iniciar Active Scan."
+    if [ -z "$scan_id" ] || [ "$scan_id" == "null" ]; then
+        log_error "Fallo al iniciar Active Scan. ID nulo."
         return 1
     fi
 
     while true; do
-        status=$(curl -s "http://localhost:$ZAP_PORT/JSON/ascan/view/status/?scanId=$scan_id" | jq -r '.status')
-        log_info "Active Scan progreso: $status%"
-        [ "$status" -eq 100 ] && break
+        status=$(curl -s "http://localhost:$ZAP_PORT/JSON/ascan/view/status/?scanId=$scan_id" | jq -r '.status // empty')
+
+        if [[ "$status" =~ ^[0-9]+$ ]]; then
+            log_info "Active Scan progreso: $status%"
+            if [ "$status" -eq 100 ]; then
+                break
+            fi
+        else
+            log_error "Progreso no válido: '$status'. Verifica si el escaneo inició correctamente."
+            break
+        fi
+
         sleep 5
     done
 }
