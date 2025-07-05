@@ -3,10 +3,10 @@ pipeline {
 
     environment {
         // Configuración de la aplicación objetivo
-        ZAP_TARGET_URL = 'http://192.168.72.129'
+        ZAP_TARGET_URL = 'http://192.168.81.129'
         
         // Configuración VM-Kali
-        ZAP_VM_IP = '192.168.72.131'
+        ZAP_VM_IP = '192.168.81.131'
         ZAP_USER = 'kali'
         
         // Configuración de reportes
